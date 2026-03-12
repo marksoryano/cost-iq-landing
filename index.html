@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --gold: #E9A83A;
       --gold-dim: rgba(233, 168, 58, 0.15);
@@ -20,9 +19,7 @@
       --text-mid: rgba(240, 236, 227, 0.7);
       --border: rgba(240, 236, 227, 0.08);
     }
-
     html { scroll-behavior: smooth; }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -31,8 +28,6 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
-    /* NOISE OVERLAY */
     body::before {
       content: '';
       position: fixed;
@@ -42,8 +37,6 @@
       z-index: 0;
       opacity: 0.6;
     }
-
-    /* GRID BACKGROUND */
     body::after {
       content: '';
       position: fixed;
@@ -55,8 +48,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
-    /* GLOW */
     .glow {
       position: fixed;
       width: 600px;
@@ -69,13 +60,9 @@
       pointer-events: none;
       z-index: 0;
     }
-
-    /* NAV */
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 100;
       padding: 24px 48px;
       display: flex;
@@ -84,13 +71,11 @@
       border-bottom: 1px solid transparent;
       transition: border-color 0.3s, background 0.3s;
     }
-
     nav.scrolled {
       border-color: var(--border);
       background: rgba(14, 14, 14, 0.85);
       backdrop-filter: blur(12px);
     }
-
     .logo {
       font-family: 'Cormorant Garamond', serif;
       font-size: 22px;
@@ -99,11 +84,7 @@
       color: var(--text);
       text-decoration: none;
     }
-
-    .logo span {
-      color: var(--gold);
-    }
-
+    .logo span { color: var(--gold); }
     .nav-tag {
       font-family: 'DM Mono', monospace;
       font-size: 10px;
@@ -115,8 +96,6 @@
       padding: 6px 14px;
       border-radius: 2px;
     }
-
-    /* HERO */
     .hero {
       position: relative;
       z-index: 1;
@@ -128,7 +107,6 @@
       text-align: center;
       padding: 120px 24px 80px;
     }
-
     .eyebrow {
       font-family: 'DM Mono', monospace;
       font-size: 10px;
@@ -140,14 +118,7 @@
       opacity: 0;
       animation: fadeUp 0.8s ease forwards 0.2s;
     }
-
-    .eyebrow::before,
-    .eyebrow::after {
-      content: '—';
-      margin: 0 12px;
-      opacity: 0.4;
-    }
-
+    .eyebrow::before, .eyebrow::after { content: '—'; margin: 0 12px; opacity: 0.4; }
     h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(52px, 8vw, 96px);
@@ -158,12 +129,7 @@
       opacity: 0;
       animation: fadeUp 0.8s ease forwards 0.4s;
     }
-
-    h1 em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
+    h1 em { font-style: italic; color: var(--gold); }
     .subtitle {
       font-size: clamp(14px, 2vw, 17px);
       font-weight: 300;
@@ -174,30 +140,24 @@
       opacity: 0;
       animation: fadeUp 0.8s ease forwards 0.6s;
     }
-
-    /* FORM */
     .form-wrap {
       width: 100%;
       max-width: 460px;
       opacity: 0;
       animation: fadeUp 0.8s ease forwards 0.8s;
     }
-
     .form-inner {
       display: flex;
-      gap: 0;
       border: 1px solid var(--gold-line);
       border-radius: 3px;
       overflow: hidden;
       background: rgba(233, 168, 58, 0.03);
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-
     .form-inner:focus-within {
       border-color: var(--gold);
       box-shadow: 0 0 0 3px rgba(233, 168, 58, 0.08), 0 0 30px rgba(233, 168, 58, 0.06);
     }
-
     .form-inner input {
       flex: 1;
       background: transparent;
@@ -210,11 +170,7 @@
       color: var(--text);
       letter-spacing: 0.02em;
     }
-
-    .form-inner input::placeholder {
-      color: var(--text-dim);
-    }
-
+    .form-inner input::placeholder { color: var(--text-dim); }
     .form-inner button {
       background: var(--gold);
       border: none;
@@ -229,22 +185,14 @@
       white-space: nowrap;
       transition: background 0.2s, opacity 0.2s;
     }
-
-    .form-inner button:hover {
-      background: #f0b84a;
-    }
-
-    .form-inner button:active {
-      opacity: 0.85;
-    }
-
+    .form-inner button:hover { background: #f0b84a; }
+    .form-inner button:disabled { opacity: 0.6; cursor: default; }
     .form-note {
       font-size: 11px;
       color: var(--text-dim);
       margin-top: 12px;
       letter-spacing: 0.04em;
     }
-
     .success-msg {
       display: none;
       font-family: 'DM Mono', monospace;
@@ -256,8 +204,6 @@
       border-radius: 3px;
       text-align: center;
     }
-
-    /* DIVIDER */
     .divider {
       position: relative;
       z-index: 1;
@@ -267,8 +213,6 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold-line), transparent);
     }
-
-    /* FEATURES */
     .features {
       position: relative;
       z-index: 1;
@@ -276,7 +220,6 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-
     .features-label {
       font-family: 'DM Mono', monospace;
       font-size: 10px;
@@ -286,7 +229,6 @@
       text-align: center;
       margin-bottom: 64px;
     }
-
     .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -294,17 +236,12 @@
       background: var(--border);
       border: 1px solid var(--border);
     }
-
     .feature {
       background: var(--bg);
       padding: 40px 32px;
       transition: background 0.3s;
     }
-
-    .feature:hover {
-      background: var(--bg3);
-    }
-
+    .feature:hover { background: var(--bg3); }
     .feature-num {
       font-family: 'Cormorant Garamond', serif;
       font-size: 13px;
@@ -313,7 +250,6 @@
       margin-bottom: 20px;
       opacity: 0.6;
     }
-
     .feature h3 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 22px;
@@ -321,15 +257,12 @@
       margin-bottom: 12px;
       letter-spacing: 0.01em;
     }
-
     .feature p {
       font-size: 13px;
       color: var(--text-dim);
       line-height: 1.7;
       font-weight: 300;
     }
-
-    /* STATS */
     .stats {
       position: relative;
       z-index: 1;
@@ -341,7 +274,6 @@
       gap: 40px;
       text-align: center;
     }
-
     .stat-num {
       font-family: 'Cormorant Garamond', serif;
       font-size: 52px;
@@ -350,15 +282,12 @@
       line-height: 1;
       margin-bottom: 8px;
     }
-
     .stat-label {
       font-size: 12px;
       color: var(--text-dim);
       letter-spacing: 0.08em;
       line-height: 1.5;
     }
-
-    /* FOOTER */
     footer {
       position: relative;
       z-index: 1;
@@ -368,36 +297,20 @@
       align-items: center;
       justify-content: space-between;
     }
-
     .footer-logo {
       font-family: 'Cormorant Garamond', serif;
       font-size: 18px;
       font-weight: 600;
       letter-spacing: 0.08em;
     }
-
     .footer-logo span { color: var(--gold); }
-
-    .footer-right {
-      font-size: 11px;
-      color: var(--text-dim);
-      letter-spacing: 0.06em;
-    }
-
-    .footer-right a {
-      color: var(--text-dim);
-      text-decoration: none;
-    }
-
+    .footer-right { font-size: 11px; color: var(--text-dim); letter-spacing: 0.06em; }
+    .footer-right a { color: var(--text-dim); text-decoration: none; }
     .footer-right a:hover { color: var(--gold); }
-
-    /* ANIMATIONS */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* RESPONSIVE */
     @media (max-width: 768px) {
       nav { padding: 20px 24px; }
       .features-grid { grid-template-columns: 1fr; }
@@ -407,25 +320,21 @@
   </style>
 </head>
 <body>
-
   <div class="glow"></div>
-
   <nav id="nav">
     <a href="#" class="logo">Cost<span>IQ</span></a>
     <span class="nav-tag">Early Access</span>
   </nav>
-
   <section class="hero">
     <p class="eyebrow">Automotive Cost Intelligence</p>
     <h1>Negotiate smarter.<br><em>Price with precision.</em></h1>
     <p class="subtitle">
       CostIQ is an AI-powered platform that transforms how automotive buyers and suppliers manage cost breakdowns — from manual Excel to intelligent negotiation.
     </p>
-
     <div class="form-wrap">
       <div class="form-inner" id="formInner">
         <input type="email" id="emailInput" placeholder="Your work email" autocomplete="off" />
-        <button onclick="handleSubmit()">Request Access</button>
+        <button id="submitBtn" onclick="handleSubmit()">Request Access</button>
       </div>
       <div class="success-msg" id="successMsg">
         ✦ &nbsp; You're on the list. We'll be in touch shortly.
@@ -433,9 +342,7 @@
       <p class="form-note">Launching with select automotive Tier 1 partners in 2026.</p>
     </div>
   </section>
-
   <div class="divider"></div>
-
   <section class="features">
     <p class="features-label">What CostIQ does</p>
     <div class="features-grid">
@@ -471,9 +378,7 @@
       </div>
     </div>
   </section>
-
   <div class="divider"></div>
-
   <section class="stats">
     <div>
       <p class="stat-num">11</p>
@@ -488,9 +393,7 @@
       <p class="stat-label">Powered negotiation,<br>benchmarking & analysis</p>
     </div>
   </section>
-
   <div class="divider"></div>
-
   <footer>
     <div class="footer-logo">Cost<span>IQ</span></div>
     <div class="footer-right">
@@ -498,15 +401,12 @@
       &nbsp;·&nbsp; © 2026 CostIQ
     </div>
   </footer>
-
   <script>
-    // Nav scroll effect
     window.addEventListener('scroll', () => {
       document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
     });
 
-    // Form submit
-    function handleSubmit() {
+    async function handleSubmit() {
       const email = document.getElementById('emailInput').value.trim();
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!re.test(email)) {
@@ -514,12 +414,31 @@
         setTimeout(() => document.getElementById('emailInput').style.borderLeft = '', 1500);
         return;
       }
-      document.getElementById('formInner').style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = '...';
+      btn.disabled = true;
+      try {
+        const res = await fetch('https://formspree.io/f/maqpjqlw', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        if (res.ok) {
+          document.getElementById('formInner').style.display = 'none';
+          document.getElementById('successMsg').style.display = 'block';
+        } else {
+          btn.textContent = 'Request Access';
+          btn.disabled = false;
+          alert('Something went wrong. Please try again.');
+        }
+      } catch(e) {
+        btn.textContent = 'Request Access';
+        btn.disabled = false;
+        alert('Something went wrong. Please try again.');
+      }
     }
 
-    // Enter key
-    document.getElementById('emailInput').addEventListener('keydown', (e) => {
+    document.getElementById('emailInput').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') handleSubmit();
     });
   </script>
