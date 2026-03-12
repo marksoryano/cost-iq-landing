@@ -316,6 +316,9 @@
       .features-grid { grid-template-columns: 1fr; }
       .stats { grid-template-columns: 1fr; gap: 32px; }
       footer { flex-direction: column; gap: 12px; text-align: center; }
+      .form-inner { flex-direction: column; }
+      .form-inner input { border-bottom: 1px solid var(--gold-line); }
+      .form-inner button { width: 100%; }
     }
   </style>
 </head>
@@ -397,11 +400,11 @@
   <footer>
     <div class="footer-logo">Cost<span>IQ</span></div>
     <div class="footer-right">
-      <a href="mailto:mark@cost-iq.ai">mark@cost-iq.ai</a>
+      <a href="/cdn-cgi/l/email-protection#89e4e8fbe2c9eae6fafda4e0f8a7e8e0"><span class="__cf_email__" data-cfemail="b6dbd7c4ddf6d5d9c5c29bdfc798d7df">[email&#160;protected]</span></a>
       &nbsp;·&nbsp; © 2026 CostIQ
     </div>
   </footer>
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     window.addEventListener('scroll', () => {
       document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
     });
@@ -434,13 +437,3 @@
       } catch(e) {
         btn.textContent = 'Request Access';
         btn.disabled = false;
-        alert('Something went wrong. Please try again.');
-      }
-    }
-
-    document.getElementById('emailInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') handleSubmit();
-    });
-  </script>
-</body>
-</html>
