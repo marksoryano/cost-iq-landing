@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CostIQ — AI-Powered Cost Intelligence for Automotive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #E9A83A;
+      --gold-dim: rgba(233, 168, 58, 0.15);
+      --gold-line: rgba(233, 168, 58, 0.3);
+      --bg: #0e0e0e;
+      --bg2: #141414;
+      --bg3: #1a1a1a;
+      --text: #f0ece3;
+      --text-dim: rgba(240, 236, 227, 0.45);
+      --text-mid: rgba(240, 236, 227, 0.7);
+      --border: rgba(240, 236, 227, 0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* GRID BACKGROUND */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(233, 168, 58, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(233, 168, 58, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* GLOW */
+    .glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(233, 168, 58, 0.07) 0%, transparent 70%);
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    nav.scrolled {
+      border-color: var(--border);
+      background: rgba(14, 14, 14, 0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--gold);
+    }
+
+    .nav-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 300;
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 2px;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .eyebrow::before,
+    .eyebrow::after {
+      content: '—';
+      margin: 0 12px;
+      opacity: 0.4;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .subtitle {
+      font-size: clamp(14px, 2vw, 17px);
+      font-weight: 300;
+      color: var(--text-mid);
+      max-width: 520px;
+      line-height: 1.7;
+      margin: 28px auto 52px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    /* FORM */
+    .form-wrap {
+      width: 100%;
+      max-width: 460px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .form-inner {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--gold-line);
+      border-radius: 3px;
+      overflow: hidden;
+      background: rgba(233, 168, 58, 0.03);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-inner:focus-within {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(233, 168, 58, 0.08), 0 0 30px rgba(233, 168, 58, 0.06);
+    }
+
+    .form-inner input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 16px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .form-inner input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .form-inner button {
+      background: var(--gold);
+      border: none;
+      padding: 16px 24px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #0e0e0e;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    .form-inner button:hover {
+      background: #f0b84a;
+    }
+
+    .form-inner button:active {
+      opacity: 0.85;
+    }
+
+    .form-note {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .success-msg {
+      display: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      padding: 16px;
+      border: 1px solid var(--gold-line);
+      border-radius: 3px;
+      text-align: center;
+    }
+
+    /* DIVIDER */
+    .divider {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-line), transparent);
+    }
+
+    /* FEATURES */
+    .features {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .features-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .feature {
+      background: var(--bg);
+      padding: 40px 32px;
+      transition: background 0.3s;
+    }
+
+    .feature:hover {
+      background: var(--bg3);
+    }
+
+    .feature-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+      opacity: 0.6;
+    }
+
+    .feature h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .feature p {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* STATS */
+    .stats {
+      position: relative;
+      z-index: 1;
+      padding: 80px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      line-height: 1.5;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .footer-logo span { color: var(--gold); }
+
+    .footer-right {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-right a {
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+
+    .footer-right a:hover { color: var(--gold); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; gap: 32px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow"></div>
+
+  <nav id="nav">
+    <a href="#" class="logo">Cost<span>IQ</span></a>
+    <span class="nav-tag">Early Access</span>
+  </nav>
+
+  <section class="hero">
+    <p class="eyebrow">Automotive Cost Intelligence</p>
+    <h1>Negotiate smarter.<br><em>Price with precision.</em></h1>
+    <p class="subtitle">
+      CostIQ is an AI-powered platform that transforms how automotive buyers and suppliers manage cost breakdowns — from manual Excel to intelligent negotiation.
+    </p>
+
+    <div class="form-wrap">
+      <div class="form-inner" id="formInner">
+        <input type="email" id="emailInput" placeholder="Your work email" autocomplete="off" />
+        <button onclick="handleSubmit()">Request Access</button>
+      </div>
+      <div class="success-msg" id="successMsg">
+        ✦ &nbsp; You're on the list. We'll be in touch shortly.
+      </div>
+      <p class="form-note">Launching with select automotive Tier 1 partners in 2026.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="features">
+    <p class="features-label">What CostIQ does</p>
+    <div class="features-grid">
+      <div class="feature">
+        <p class="feature-num">01</p>
+        <h3>Cost Breakdown Intelligence</h3>
+        <p>Suppliers build structured CBDs across all cost categories. Buyers receive full visibility into material, process, tooling, and overhead — not just a final price.</p>
+      </div>
+      <div class="feature">
+        <p class="feature-num">02</p>
+        <h3>AI Negotiation Engine</h3>
+        <p>Every cost line is benchmarked against real market data. The AI identifies where supplier costs exceed fair market rates and prepares a structured negotiation position.</p>
+      </div>
+      <div class="feature">
+        <p class="feature-num">03</p>
+        <h3>Drawing Analysis</h3>
+        <p>Upload a technical drawing and CostIQ's AI identifies the required manufacturing capabilities — automatically populating the cost builder before the supplier starts.</p>
+      </div>
+      <div class="feature">
+        <p class="feature-num">04</p>
+        <h3>Supplier Benchmarking</h3>
+        <p>Suppliers see how their machine rates, labour costs, and utilisation compare against country, regional, and global peers — positioning competitively before submission.</p>
+      </div>
+      <div class="feature">
+        <p class="feature-num">05</p>
+        <h3>Capacity Confirmation</h3>
+        <p>Machine allocation is calculated automatically against annual volumes. Suppliers confirm capacity per RFQ before nomination — eliminating surprises post-award.</p>
+      </div>
+      <div class="feature">
+        <p class="feature-num">06</p>
+        <h3>Negotiation History</h3>
+        <p>Every CBD version, revision, and negotiation round is tracked. Full audit trail from first submission to final nomination — across all suppliers and programs.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="stats">
+    <div>
+      <p class="stat-num">11</p>
+      <p class="stat-label">Cost breakdown<br>categories covered</p>
+    </div>
+    <div>
+      <p class="stat-num">2</p>
+      <p class="stat-label">Sides of the market —<br>buyer and supplier</p>
+    </div>
+    <div>
+      <p class="stat-num">AI</p>
+      <p class="stat-label">Powered negotiation,<br>benchmarking & analysis</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <footer>
+    <div class="footer-logo">Cost<span>IQ</span></div>
+    <div class="footer-right">
+      <a href="mailto:mark@cost-iq.ai">mark@cost-iq.ai</a>
+      &nbsp;·&nbsp; © 2026 CostIQ
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Form submit
+    function handleSubmit() {
+      const email = document.getElementById('emailInput').value.trim();
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!re.test(email)) {
+        document.getElementById('emailInput').style.borderLeft = '2px solid rgba(233,100,58,0.6)';
+        setTimeout(() => document.getElementById('emailInput').style.borderLeft = '', 1500);
+        return;
+      }
+      document.getElementById('formInner').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    }
+
+    // Enter key
+    document.getElementById('emailInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSubmit();
+    });
+  </script>
+</body>
+</html>
